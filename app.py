@@ -2,6 +2,7 @@ import streamlit as st
 import markdown
 from bs4 import BeautifulSoup
 import html
+import streamlit.components.v1 as components
 
 # App title
 st.set_page_config(page_title="Nainsi's Post Formatter", layout="centered")
@@ -11,7 +12,7 @@ st.markdown("""
     </h1>
 """, unsafe_allow_html=True)
 
-# Apply obnoxiously pretty pink styling with animated background and button interaction
+# Apply obnoxiously pretty pink styling with animated background
 st.markdown("""
     <style>
         body {
@@ -45,27 +46,7 @@ st.markdown("""
             color: deeppink !important;
             font-family: "Comic Sans MS", cursive, sans-serif !important;
         }
-        .copy-btn {
-            background-color: hotpink;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-family: 'Comic Sans MS';
-            cursor: pointer;
-        }
     </style>
-    <script>
-        function copyToClipboard(text, btnId) {
-            navigator.clipboard.writeText(text).then(function() {
-                const btn = document.getElementById(btnId);
-                const original = btn.innerText;
-                btn.innerText = 'Copied!';
-                setTimeout(() => btn.innerText = original, 1000);
-            });
-        }
-    </script>
 """, unsafe_allow_html=True)
 
 # Markdown input
@@ -103,17 +84,19 @@ if convert_clicked and markdown_input:
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     st.subheader("Title")
     st.code(title, language="text")
-    st.markdown(f"""
-        <button id='copy-title' class='copy-btn' onclick="copyToClipboard(`{html.escape(title)}`, 'copy-title')">
+    components.html(f"""
+        <button onclick="navigator.clipboard.writeText(`{html.escape(title)}`); this.innerText='Copied!'; setTimeout(() => this.innerText='Copy Title to Clipboard', 1000);"
+            style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS'; cursor: pointer;">
             Copy Title to Clipboard
         </button>
-    """, unsafe_allow_html=True)
+    """, height=40)
 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
     safe_body = html.escape(body_html).replace("`", "\\`")
-    st.markdown(f"""
-        <button id='copy-body' class='copy-btn' onclick="copyToClipboard(`{safe_body}`, 'copy-body')">
+    components.html(f"""
+        <button onclick="navigator.clipboard.writeText(`{safe_body}`); this.innerText='Copied!'; setTimeout(() => this.innerText='Copy Body to Clipboard', 1000);"
+            style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-family: 'Comic Sans MS'; cursor: pointer;">
             Copy Body to Clipboard
         </button>
-    """, unsafe_allow_html=True)
+    """, height=40)
