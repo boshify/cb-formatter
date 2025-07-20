@@ -89,7 +89,7 @@ if convert_clicked and markdown_input:
             style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS'; cursor: pointer;">
             Copy Title to Clipboard
         </button>
-    """, height=40)
+    """, height=60)
 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
@@ -99,4 +99,4 @@ if convert_clicked and markdown_input:
             style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-family: 'Comic Sans MS'; cursor: pointer;">
             Copy Body to Clipboard
         </button>
-    """, height=40)
+    """, height=60)
