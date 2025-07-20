@@ -11,7 +11,7 @@ st.markdown("""
     </h1>
 """, unsafe_allow_html=True)
 
-# Apply obnoxiously pretty pink styling with animated background
+# Apply obnoxiously pretty pink styling with animated background and button interaction
 st.markdown("""
     <style>
         body {
@@ -45,7 +45,27 @@ st.markdown("""
             color: deeppink !important;
             font-family: "Comic Sans MS", cursive, sans-serif !important;
         }
+        .copy-btn {
+            background-color: hotpink;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: 'Comic Sans MS';
+            cursor: pointer;
+        }
     </style>
+    <script>
+        function copyToClipboard(text, btnId) {
+            navigator.clipboard.writeText(text).then(function() {
+                const btn = document.getElementById(btnId);
+                const original = btn.innerText;
+                btn.innerText = 'Copied!';
+                setTimeout(() => btn.innerText = original, 1000);
+            });
+        }
+    </script>
 """, unsafe_allow_html=True)
 
 # Markdown input
@@ -84,7 +104,7 @@ if convert_clicked and markdown_input:
     st.subheader("Title")
     st.code(title, language="text")
     st.markdown(f"""
-        <button onclick="navigator.clipboard.writeText('{html.escape(title)}')" style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS';">
+        <button id='copy-title' class='copy-btn' onclick="copyToClipboard(`{html.escape(title)}`, 'copy-title')">
             Copy Title to Clipboard
         </button>
     """, unsafe_allow_html=True)
@@ -93,7 +113,7 @@ if convert_clicked and markdown_input:
     st.code(body_html, language="html")
     safe_body = html.escape(body_html).replace("`", "\\`")
     st.markdown(f"""
-        <button onclick="navigator.clipboard.writeText(`{safe_body}`)" style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-family: 'Comic Sans MS';">
+        <button id='copy-body' class='copy-btn' onclick="copyToClipboard(`{safe_body}`, 'copy-body')">
             Copy Body to Clipboard
         </button>
     """, unsafe_allow_html=True)
