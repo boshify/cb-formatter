@@ -3,13 +3,41 @@ import markdown
 from bs4 import BeautifulSoup
 
 # App title
-st.set_page_config(page_title="Niansi's Post Formatter", layout="centered")
-st.title("Markdown to HTML Converter")
+st.set_page_config(page_title="Nainsi's Post Formatter", layout="centered")
+st.markdown("""
+    <h1 style='color: deeppink; text-align: center; font-family: "Comic Sans MS", cursive, sans-serif;'>
+        Nainsi's Post Formatter 💅✨
+    </h1>
+""", unsafe_allow_html=True)
+
+# Apply obnoxiously pretty pink styling
+st.markdown("""
+    <style>
+        .stTextArea textarea {
+            background-color: mistyrose;
+            color: deeppink;
+            font-weight: bold;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+        }
+        .stButton>button {
+            background-color: hotpink;
+            color: white;
+            font-size: 16px;
+            border-radius: 12px;
+            padding: 10px 24px;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+        }
+        .stCodeBlock {
+            background-color: lavenderblush !important;
+            color: deeppink !important;
+            font-family: "Comic Sans MS", cursive, sans-serif !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Markdown input
 markdown_input = st.text_area("Paste your Markdown here:", height=300)
 
-# Use plain text instead of emoji to avoid encoding issues
 convert_clicked = st.button("Convert!")
 
 # Function to extract title and body
@@ -43,8 +71,16 @@ if convert_clicked and markdown_input:
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     st.subheader("Title")
     st.code(title, language="text")
-    st.download_button("Download Title", title, file_name="title.txt")
+    st.markdown(f"""
+        <button onclick="navigator.clipboard.writeText(`{title}`)" style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS';">
+            Copy Title to Clipboard
+        </button>
+    """, unsafe_allow_html=True)
 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
-    st.download_button("Download HTML Body", body_html, file_name="body.html")
+    st.markdown(f"""
+        <button onclick="navigator.clipboard.writeText(`{body_html}`)" style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-family: 'Comic Sans MS';">
+            Copy Body to Clipboard
+        </button>
+    """, unsafe_allow_html=True)
