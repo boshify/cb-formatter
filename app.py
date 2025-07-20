@@ -1,14 +1,15 @@
 import streamlit as st
 import markdown
 from bs4 import BeautifulSoup
-import pyperclip
 
 # App title
-st.set_page_config(page_title="Markdown to HTML Converter", layout="centered")
+st.set_page_config(page_title="Niansi's Post Formatter", layout="centered")
 st.title("Markdown to HTML Converter")
 
 # Markdown input
 markdown_input = st.text_area("Paste your Markdown here:", height=300)
+
+convert_clicked = st.button("\ud83c\udfa9 Convert!")
 
 # Function to extract title and body
 def extract_title_and_body(html):
@@ -29,7 +30,7 @@ author_html = '''<p>&nbsp;</p>
 </div>
 </div>'''
 
-if markdown_input:
+if convert_clicked and markdown_input:
     # Convert Markdown to HTML
     html_output = markdown.markdown(markdown_input, extensions=[
         'extra', 'codehilite', 'toc', 'tables', 'fenced_code',
@@ -38,13 +39,11 @@ if markdown_input:
     title, body_html = extract_title_and_body(html_output)
     body_html += author_html
 
+    st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     st.subheader("Title")
     st.code(title, language="text")
-    st.button("Copy Title to Clipboard", on_click=lambda: pyperclip.copy(title))
+    st.download_button("Copy Title to Clipboard", title, file_name="title.txt")
 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
-    st.button("Copy Body to Clipboard", on_click=lambda: pyperclip.copy(body_html))
-
-st.markdown("---")
-st.markdown("Made for [Streamlit Community Cloud](https://streamlit.io/cloud)")
+    st.download_button("Copy Body to Clipboard", body_html, file_name="body.html")
