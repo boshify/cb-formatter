@@ -94,18 +94,33 @@ if convert_clicked and raw_html_input is not None and raw_html_input.strip() != 
     st.subheader("Title")
     st.code(title, language="text")
     components.html(f"""
-        <button onclick="navigator.clipboard.writeText(`{html.escape(title)}`); this.innerText='Copied!'; setTimeout(() => this.innerText='Copy Title to Clipboard', 1000);"
-            style="background-color: hotpink; color: white; padding: 10px 20px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS'; cursor: pointer;">
+        <button onclick="
+            navigator.clipboard.write([
+              new ClipboardItem({{
+                'text/plain': new Blob([`{html.escape(title)}`], {{ type: 'text/plain' }})
+              }})
+            ]);
+            this.innerText='Copied!';
+            setTimeout(() => this.innerText='Copy Title to Clipboard', 1000);
+        "
+        style="background-color: hotpink; color: white; padding: 10px 20px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS'; cursor: pointer;">
             Copy Title to Clipboard
         </button>
     """, height=60)
 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
-    safe_body = html.escape(body_html).replace("`", "\\`")
     components.html(f"""
-        <button onclick="navigator.clipboard.writeText(`{safe_body}`); this.innerText='Copied!'; setTimeout(() => this.innerText='Copy Body to Clipboard', 1000);"
-            style="background-color: hotpink; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-family: 'Comic Sans MS'; cursor: pointer;">
+        <button onclick="
+            navigator.clipboard.write([
+              new ClipboardItem({{
+                'text/html': new Blob([`{body_html}`], {{ type: 'text/html' }})
+              }})
+            ]);
+            this.innerText='Copied!';
+            setTimeout(() => this.innerText='Copy Body to Clipboard', 1000);
+        "
+        style="background-color: hotpink; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-family: 'Comic Sans MS'; cursor: pointer;">
             Copy Body to Clipboard
         </button>
     """, height=60)
