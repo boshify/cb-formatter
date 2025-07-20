@@ -2,3 +2,4 @@ streamlit
 markdown
 beautifulsoup4
 pyperclip
+streamlit-quill
