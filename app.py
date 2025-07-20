@@ -13,14 +13,14 @@ st.markdown("""
     </h1>
 """, unsafe_allow_html=True)
 
-# Apply obnoxiously pretty pink styling with animated background
+# Apply obnoxiously pretty pink styling
 st.markdown("""
     <style>
-        body {
-            background: pink;
-            background-image: radial-gradient(white 1px, transparent 0);
-            background-size: 20px 20px;
-            animation: sparkle 4s linear infinite;
+        html, body, [class*="css"]  {
+            background: pink !important;
+            background-image: radial-gradient(white 1px, transparent 0) !important;
+            background-size: 20px 20px !important;
+            animation: sparkle 4s linear infinite !important;
         }
 
         @keyframes sparkle {
@@ -97,43 +97,53 @@ if convert_clicked and raw_html_input is not None and raw_html_input.strip() != 
 
     safe_title = json.dumps(title)
     components.html(f"""
-        <div style="text-align: left; margin-top: 10px;">
-            <button onclick="
+        <script>
+            function copyTitle() {{
                 navigator.clipboard.write([
                   new ClipboardItem({{
                     'text/plain': new Blob([{safe_title}], {{ type: 'text/plain' }})
                   }})
                 ]);
-                this.innerText='Copied!';
-                setTimeout(() => this.innerText='Copy Title to Clipboard', 1000);
-            "
+                const btn = document.getElementById('copy-title-btn');
+                const original = btn.innerHTML;
+                btn.innerHTML = 'Copied!';
+                setTimeout(() => btn.innerHTML = original, 1000);
+            }}
+        </script>
+        <div style="text-align: left; margin-top: 10px;">
+            <button id="copy-title-btn" onclick="copyTitle()"
             style='background-color: hotpink; color: white; padding: 10px 20px; 
                    border: none; border-radius: 8px; font-family: "Comic Sans MS"; 
                    cursor: pointer; font-size: 14px;'>
                 Copy Title to Clipboard
             </button>
         </div>
-    """, height=80)
+    """, height=100)
 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
 
     js_safe_html = json.dumps(body_html)
     components.html(f"""
-        <div style="text-align: left; margin-top: 10px;">
-            <button onclick="
+        <script>
+            function copyBody() {{
                 navigator.clipboard.write([
                   new ClipboardItem({{
                     'text/html': new Blob([{js_safe_html}], {{ type: 'text/html' }})
                   }})
                 ]);
-                this.innerText='Copied!';
-                setTimeout(() => this.innerText='Copy Body to Clipboard', 1000);
-            "
+                const btn = document.getElementById('copy-body-btn');
+                const original = btn.innerHTML;
+                btn.innerHTML = 'Copied!';
+                setTimeout(() => btn.innerHTML = original, 1000);
+            }}
+        </script>
+        <div style="text-align: left; margin-top: 10px;">
+            <button id="copy-body-btn" onclick="copyBody()"
             style='background-color: hotpink; color: white; padding: 10px 20px; 
                    border: none; border-radius: 8px; font-family: "Comic Sans MS"; 
                    cursor: pointer; font-size: 14px;'>
                 Copy Body to Clipboard
             </button>
         </div>
-    """, height=80)
+    """, height=100)
