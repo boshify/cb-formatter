@@ -9,7 +9,8 @@ st.title("Markdown to HTML Converter")
 # Markdown input
 markdown_input = st.text_area("Paste your Markdown here:", height=300)
 
-convert_clicked = st.button("\ud83c\udfa9 Convert!")
+# Use plain text instead of emoji to avoid encoding issues
+convert_clicked = st.button("Convert!")
 
 # Function to extract title and body
 def extract_title_and_body(html):
@@ -42,8 +43,8 @@ if convert_clicked and markdown_input:
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     st.subheader("Title")
     st.code(title, language="text")
-    st.download_button("Copy Title to Clipboard", title, file_name="title.txt")
+    st.download_button("Download Title", title, file_name="title.txt")
 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
-    st.download_button("Copy Body to Clipboard", body_html, file_name="body.html")
+    st.download_button("Download HTML Body", body_html, file_name="body.html")
