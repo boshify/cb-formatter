@@ -2,6 +2,7 @@ import streamlit as st
 from bs4 import BeautifulSoup
 import html
 import streamlit.components.v1 as components
+from streamlit_quill import st_quill
 
 # App title
 st.set_page_config(page_title="Nainsi's Post Formatter", layout="centered")
@@ -26,12 +27,6 @@ st.markdown("""
             100% { background-position: 100px 100px; }
         }
 
-        .stTextArea textarea {
-            background-color: mistyrose;
-            color: deeppink;
-            font-weight: bold;
-            font-family: "Comic Sans MS", cursive, sans-serif;
-        }
         .stButton>button {
             background-color: hotpink;
             color: white;
@@ -48,8 +43,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Google Docs HTML input
-raw_html_input = st.text_area("Paste your rich text (from Google Docs) here:", height=300)
+# Rich Text Input from Google Docs
+raw_html_input = st_quill(placeholder="Paste rich text from Google Docs here...", html=True)
 convert_clicked = st.button("Convert!")
 
 # Function to clean pasted Google Docs HTML
@@ -90,7 +85,7 @@ author_html = '''<p>&nbsp;</p>
 </div>'''
 
 # Conversion
-if convert_clicked and raw_html_input:
+if convert_clicked and raw_html_input is not None and raw_html_input.strip() != "":
     cleaned_html = clean_google_docs_html(raw_html_input)
     title, body_html = extract_title_and_body(cleaned_html)
     body_html += author_html
