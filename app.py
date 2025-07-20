@@ -81,7 +81,7 @@ author_html = '''<p>&nbsp;</p>
 <div style="border-top: 2px solid #ddd; margin-top: 20px; padding-top: 20px;">
 <h3 style="font-family: Arial, sans-serif; font-size: 14pt; color: rgb(67, 67, 67); margin-bottom: 10px;">About the Author</h3>
 <div style="display: flex; align-items: center;"><img alt="Ciaran Kilbride" src="https://media.licdn.com/dms/image/C4D03AQFNEzfdqeSeBA/profile-displayphoto-shrink_200_200/0/1632302846265?e=2147483647&amp;v=beta&amp;t=PZ2iCKBctTPBOuF4e5P1KPTwbe_Wo42wgpvRExbC54Y" style="border-radius: 50%; width: 80px; height: 80px; margin-right: 15px;" />
-<p style="font-family: Arial, sans-serif; font-size: 11pt; color: rgb(0, 0, 0); line-height: 1.38;"><strong>Ciaran Kilbride</strong> is the CEO and Founder of Caterboss, Ireland's leading supplier of catering equipment. With years of experience in the food and hospitality industry, Ciaran established Caterboss in 2017 to provide high-quality, reliable equipment tailored to the needs of professional caterers. His commitment to innovation and customer service has helped Caterboss grow into a trusted name, known for anticipating industry trends and consistently meeting the needs of its clients.</p>
+<p style="font-family: Arial, sans-serif; font-size: 11pt; color: rgb(0, 0, 0); line-height: 1.38;"><strong>Ciaran Kilbride</strong> is the CEO and Founder of Caterboss, Ireland's leading supplier of catering equipment. With years of experience in the food and hospitality industry, Ciaran established Caterboss in 2017 to provide high-quality, reliable equipment tailored to the needs of food service professionals. His commitment to innovation and customer service has helped Caterboss grow into a trusted name, known for anticipating industry trends and consistently meeting the needs of its clients.</p>
 </div>
 </div>'''
 
@@ -123,13 +123,13 @@ if convert_clicked and raw_html_input is not None and raw_html_input.strip() != 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
 
-    js_safe_html = json.dumps(body_html)
+    safe_body_text = json.dumps(body_html)
     components.html(f"""
         <script>
             function copyBody() {{
                 navigator.clipboard.write([
                   new ClipboardItem({{
-                    'text/html': new Blob([{js_safe_html}], {{ type: 'text/html' }})
+                    'text/plain': new Blob([{safe_body_text}], {{ type: 'text/plain' }})
                   }})
                 ]);
                 const btn = document.getElementById('copy-body-btn');
