@@ -94,35 +94,46 @@ if convert_clicked and raw_html_input is not None and raw_html_input.strip() != 
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     st.subheader("Title")
     st.code(title, language="text")
+
+    safe_title = json.dumps(title)
     components.html(f"""
-        <button onclick="
-            navigator.clipboard.write([
-              new ClipboardItem({{
-                'text/plain': new Blob([`{html.escape(title)}`], {{ type: 'text/plain' }})
-              }})
-            ]);
-            this.innerText='Copied!';
-            setTimeout(() => this.innerText='Copy Title to Clipboard', 1000);
-        "
-        style="background-color: hotpink; color: white; padding: 10px 20px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS'; cursor: pointer;">
-            Copy Title to Clipboard
-        </button>
-    """, height=60)
+        <div style="text-align: left; margin-top: 10px;">
+            <button onclick="
+                navigator.clipboard.write([
+                  new ClipboardItem({{
+                    'text/plain': new Blob([{safe_title}], {{ type: 'text/plain' }})
+                  }})
+                ]);
+                this.innerText='Copied!';
+                setTimeout(() => this.innerText='Copy Title to Clipboard', 1000);
+            "
+            style='background-color: hotpink; color: white; padding: 10px 20px; 
+                   border: none; border-radius: 8px; font-family: "Comic Sans MS"; 
+                   cursor: pointer; font-size: 14px;'>
+                Copy Title to Clipboard
+            </button>
+        </div>
+    """, height=80)
 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
+
     js_safe_html = json.dumps(body_html)
     components.html(f"""
-        <button onclick="
-            navigator.clipboard.write([
-              new ClipboardItem({{
-                'text/html': new Blob([{js_safe_html}], {{ type: 'text/html' }})
-              }})
-            ]);
-            this.innerText='Copied!';
-            setTimeout(() => this.innerText='Copy Body to Clipboard', 1000);
-        "
-        style="background-color: hotpink; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-family: 'Comic Sans MS'; cursor: pointer;">
-            Copy Body to Clipboard
-        </button>
-    """, height=60)
+        <div style="text-align: left; margin-top: 10px;">
+            <button onclick="
+                navigator.clipboard.write([
+                  new ClipboardItem({{
+                    'text/html': new Blob([{js_safe_html}], {{ type: 'text/html' }})
+                  }})
+                ]);
+                this.innerText='Copied!';
+                setTimeout(() => this.innerText='Copy Body to Clipboard', 1000);
+            "
+            style='background-color: hotpink; color: white; padding: 10px 20px; 
+                   border: none; border-radius: 8px; font-family: "Comic Sans MS"; 
+                   cursor: pointer; font-size: 14px;'>
+                Copy Body to Clipboard
+            </button>
+        </div>
+    """, height=80)
