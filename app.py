@@ -60,9 +60,9 @@ def clean_google_docs_html(raw_html):
             tag.attrs.pop(attr, None)
 
         # Add line break before headings (except H1)
-        #if tag.name in ["h2", "h3", "h4", "h5", "h6"]:
-            #br_tag = soup.new_tag("br")
-            #tag.insert_before(br_tag)
+        if tag.name in ["h2"]:
+            br_tag = soup.new_tag("br")
+            tag.insert_before(br_tag)
 
     return str(soup)
 
