@@ -1,6 +1,7 @@
 import streamlit as st
 import markdown
 from bs4 import BeautifulSoup
+import html
 
 # App title
 st.set_page_config(page_title="Nainsi's Post Formatter", layout="centered")
@@ -10,9 +11,21 @@ st.markdown("""
     </h1>
 """, unsafe_allow_html=True)
 
-# Apply obnoxiously pretty pink styling
+# Apply obnoxiously pretty pink styling with animated background
 st.markdown("""
     <style>
+        body {
+            background: pink;
+            background-image: radial-gradient(white 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: sparkle 4s linear infinite;
+        }
+
+        @keyframes sparkle {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
         .stTextArea textarea {
             background-color: mistyrose;
             color: deeppink;
@@ -41,8 +54,8 @@ markdown_input = st.text_area("Paste your Markdown here:", height=300)
 convert_clicked = st.button("Convert!")
 
 # Function to extract title and body
-def extract_title_and_body(html):
-    soup = BeautifulSoup(html, "html.parser")
+def extract_title_and_body(html_text):
+    soup = BeautifulSoup(html_text, "html.parser")
     h1 = soup.find("h1")
     title = h1.get_text() if h1 else ""
     if h1:
@@ -60,7 +73,6 @@ author_html = '''<p>&nbsp;</p>
 </div>'''
 
 if convert_clicked and markdown_input:
-    # Convert Markdown to HTML
     html_output = markdown.markdown(markdown_input, extensions=[
         'extra', 'codehilite', 'toc', 'tables', 'fenced_code',
         'sane_lists', 'smarty', 'admonition', 'nl2br'
@@ -72,15 +84,16 @@ if convert_clicked and markdown_input:
     st.subheader("Title")
     st.code(title, language="text")
     st.markdown(f"""
-        <button onclick="navigator.clipboard.writeText(`{title}`)" style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS';">
+        <button onclick="navigator.clipboard.writeText('{html.escape(title)}')" style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS';">
             Copy Title to Clipboard
         </button>
     """, unsafe_allow_html=True)
 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
+    safe_body = html.escape(body_html).replace("`", "\\`")
     st.markdown(f"""
-        <button onclick="navigator.clipboard.writeText(`{body_html}`)" style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-family: 'Comic Sans MS';">
+        <button onclick="navigator.clipboard.writeText(`{safe_body}`)" style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-family: 'Comic Sans MS';">
             Copy Body to Clipboard
         </button>
     """, unsafe_allow_html=True)
