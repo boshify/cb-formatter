@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import html
 import streamlit.components.v1 as components
 from streamlit_quill import st_quill
+import json
 
 # App title
 st.set_page_config(page_title="Nainsi's Post Formatter", layout="centered")
@@ -110,11 +111,12 @@ if convert_clicked and raw_html_input is not None and raw_html_input.strip() != 
 
     st.subheader("HTML Body")
     st.code(body_html, language="html")
+    js_safe_html = json.dumps(body_html)
     components.html(f"""
         <button onclick="
             navigator.clipboard.write([
               new ClipboardItem({{
-                'text/html': new Blob([`{body_html}`], {{ type: 'text/html' }})
+                'text/html': new Blob([{js_safe_html}], {{ type: 'text/html' }})
               }})
             ]);
             this.innerText='Copied!';
