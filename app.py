@@ -1,5 +1,4 @@
 import streamlit as st
-import markdown
 from bs4 import BeautifulSoup
 import html
 import streamlit.components.v1 as components
@@ -49,10 +48,27 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Markdown input
-markdown_input = st.text_area("Paste your Markdown here:", height=300)
-
+# Google Docs HTML input
+raw_html_input = st.text_area("Paste your rich text (from Google Docs) here:", height=300)
 convert_clicked = st.button("Convert!")
+
+# Function to clean pasted Google Docs HTML
+def clean_google_docs_html(raw_html):
+    soup = BeautifulSoup(raw_html, "html.parser")
+
+    for tag in soup(["style", "script", "meta"]):
+        tag.decompose()
+
+    for tag in soup.find_all(True):
+        for attr in ["style", "class", "id"]:
+            tag.attrs.pop(attr, None)
+
+        # Add line break before headings (except H1)
+        if tag.name in ["h2", "h3", "h4", "h5", "h6"]:
+            br_tag = soup.new_tag("br")
+            tag.insert_before(br_tag)
+
+    return str(soup)
 
 # Function to extract title and body
 def extract_title_and_body(html_text):
@@ -64,7 +80,7 @@ def extract_title_and_body(html_text):
     body_html = str(soup)
     return title, body_html
 
-# Author HTML footer
+# Author footer
 author_html = '''<p>&nbsp;</p>
 <div style="border-top: 2px solid #ddd; margin-top: 20px; padding-top: 20px;">
 <h3 style="font-family: Arial, sans-serif; font-size: 14pt; color: rgb(67, 67, 67); margin-bottom: 10px;">About the Author</h3>
@@ -73,12 +89,10 @@ author_html = '''<p>&nbsp;</p>
 </div>
 </div>'''
 
-if convert_clicked and markdown_input:
-    html_output = markdown.markdown(markdown_input, extensions=[
-        'extra', 'codehilite', 'toc', 'tables', 'fenced_code',
-        'sane_lists', 'smarty', 'admonition', 'nl2br'
-    ])
-    title, body_html = extract_title_and_body(html_output)
+# Conversion
+if convert_clicked and raw_html_input:
+    cleaned_html = clean_google_docs_html(raw_html_input)
+    title, body_html = extract_title_and_body(cleaned_html)
     body_html += author_html
 
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
@@ -86,7 +100,7 @@ if convert_clicked and markdown_input:
     st.code(title, language="text")
     components.html(f"""
         <button onclick="navigator.clipboard.writeText(`{html.escape(title)}`); this.innerText='Copied!'; setTimeout(() => this.innerText='Copy Title to Clipboard', 1000);"
-            style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS'; cursor: pointer;">
+            style="background-color: hotpink; color: white; padding: 10px 20px; border: none; border-radius: 8px; margin-bottom: 20px; font-family: 'Comic Sans MS'; cursor: pointer;">
             Copy Title to Clipboard
         </button>
     """, height=60)
@@ -96,7 +110,7 @@ if convert_clicked and markdown_input:
     safe_body = html.escape(body_html).replace("`", "\\`")
     components.html(f"""
         <button onclick="navigator.clipboard.writeText(`{safe_body}`); this.innerText='Copied!'; setTimeout(() => this.innerText='Copy Body to Clipboard', 1000);"
-            style="background-color: hotpink; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-family: 'Comic Sans MS'; cursor: pointer;">
+            style="background-color: hotpink; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-family: 'Comic Sans MS'; cursor: pointer;">
             Copy Body to Clipboard
         </button>
     """, height=60)
